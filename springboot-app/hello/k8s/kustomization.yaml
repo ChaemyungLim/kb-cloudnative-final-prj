@@ -9,4 +9,4 @@ resources:
 images:
 - name: chaemlim/hello-app
   newName: chaemlim/hello-app
-  newTag: 9addc5b
+  newTag: 0389d3e
