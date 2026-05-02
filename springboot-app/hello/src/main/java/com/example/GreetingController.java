@@ -19,55 +19,80 @@ public class GreetingController {
 
 	@GetMapping(value = "/", produces = "text/html;charset=UTF-8")
 	public String home(@RequestParam(value = "name", defaultValue = "World") String name) {
-		String safeName = name.replaceAll("[<>&\"']", "");
+		String safeName = name.replaceAll("[<>&\"'%]", "");
+		String[] greetings = {
+			"hewwo, {name}~ uwu",
+			"H3LL0... wait wrong button",
+			"meow?? oh hi {name}",
+			"asdkfjasdf...zzz",
+			"{name}?? 밥 줄거야??",
+			"...zzz... (꿈에서 {name}를 봤다옹)",
+			"i wuz sleeping. now i am not. thx {name}.",
+			"purrr~ {name} 왔구냥"
+		};
+		String pick = greetings[(int) (counter.incrementAndGet() % greetings.length)];
+		String greeting = pick.replace("{name}", safeName);
 		return """
 			<!doctype html>
 			<html lang="ko">
 			<head>
 			  <meta charset="utf-8">
 			  <meta name="viewport" content="width=device-width, initial-scale=1">
-			  <title>Hello, %s</title>
-			  <script src="https://cdn.tailwindcss.com"></script>
-			  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+			  <title>🐱 hewwo</title>
 			  <style>
-			    body { font-family: 'Inter', system-ui, sans-serif; }
-			    @keyframes float { 0%%,100%% { transform: translateY(0) } 50%% { transform: translateY(-12px) } }
-			    @keyframes fadeUp { from { opacity:0; transform: translateY(20px) } to { opacity:1; transform: translateY(0) } }
-			    .float { animation: float 4s ease-in-out infinite; }
-			    .fade-up { animation: fadeUp 0.8s ease-out both; }
-			    .delay-1 { animation-delay: 0.15s; }
-			    .delay-2 { animation-delay: 0.3s; }
-			    .blob { filter: blur(80px); opacity: 0.55; }
+			    body {
+			      margin: 0; min-height: 100vh;
+			      background: linear-gradient(135deg, #ffe4ec 0%%, #fff5d6 100%%);
+			      font-family: 'Comic Sans MS', system-ui, sans-serif;
+			      display: flex; align-items: center; justify-content: center;
+			      cursor: pointer;
+			    }
+			    .card {
+			      text-align: center; padding: 3rem 2rem;
+			    }
+			    .cat {
+			      font-size: 9rem; display: inline-block;
+			      transition: transform 0.3s;
+			      animation: snore 3s ease-in-out infinite;
+			    }
+			    body:hover .cat {
+			      animation: none;
+			      transform: scale(1.15) rotate(-8deg);
+			    }
+			    @keyframes snore {
+			      0%%, 100%% { transform: rotate(-3deg) scale(1); }
+			      50%%      { transform: rotate(3deg) scale(1.03); }
+			    }
+			    .zzz {
+			      font-size: 1.8rem; color: #aaa;
+			      position: relative; top: -3rem; left: 2rem;
+			      animation: drift 3s ease-in-out infinite;
+			    }
+			    body:hover .zzz { opacity: 0; }
+			    @keyframes drift {
+			      0%%   { transform: translate(0,0); opacity: 0.3; }
+			      50%%  { transform: translate(10px,-15px); opacity: 1; }
+			      100%% { transform: translate(20px,-30px); opacity: 0; }
+			    }
+			    h1 {
+			      font-size: 2.4rem; color: #5a3d5c;
+			      margin: 0.5rem 0; font-weight: 900;
+			    }
+			    .hint {
+			      color: #b08aa8; font-size: 0.9rem; margin-top: 1rem;
+			    }
 			  </style>
 			</head>
-			<body class="min-h-screen overflow-hidden bg-slate-950 text-white relative flex items-center justify-center p-6">
-			  <div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-indigo-500 blob"></div>
-			  <div class="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-pink-500 blob"></div>
-			  <div class="absolute top-1/2 left-1/2 w-80 h-80 rounded-full bg-cyan-400 blob"></div>
-
-			  <main class="relative z-10 w-full max-w-2xl">
-			    <div class="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl p-10 sm:p-14 text-center">
-			      <div class="float text-7xl mb-6 fade-up">👋</div>
-			      <h1 class="fade-up delay-1 text-5xl sm:text-6xl font-black tracking-tight mb-4
-			                 bg-gradient-to-r from-white via-indigo-200 to-pink-200 bg-clip-text text-transparent">
-			        Hello, %s!
-			      </h1>
-			      <p class="fade-up delay-2 text-white/70 text-lg mb-8">
-			        Spring Boot · Running on Kubernetes ☁️
-			      </p>
-			      <div class="fade-up delay-2 flex flex-wrap justify-center gap-3 text-sm">
-			        <a href="/hello?name=%s" class="px-5 py-2.5 rounded-full bg-white text-slate-900 font-semibold hover:bg-indigo-100 transition">
-			          /hello JSON →
-			        </a>
-			        <a href="/?name=Claude" class="px-5 py-2.5 rounded-full bg-white/10 border border-white/30 hover:bg-white/20 transition">
-			          이름 바꿔보기
-			        </a>
-			      </div>
+			<body title="쓰담쓰담">
+			  <div class="card">
+			    <div>
+			      <span class="cat">🐱</span><span class="zzz">💤</span>
 			    </div>
-			    <p class="text-center text-white/40 text-xs mt-6">tip: <code class="text-white/60">?name=YourName</code> 쿼리로 인사받기</p>
-			  </main>
+			    <h1>%s</h1>
+			    <p class="hint">(마우스 올려보면 깨어남 🐾)</p>
+			  </div>
 			</body>
 			</html>
-			""".formatted(safeName, safeName, safeName);
+			""".formatted(greeting);
 	}
 }
